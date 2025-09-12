@@ -1,17 +1,33 @@
 import { Button } from "@/components/ui/button";
 import { useDivisionDataQuery } from "@/redux/feature/Division/division.api";
-import { useGetAllTourQuery } from "@/redux/feature/Tour/tour.api";
+import { useGetAllTourQuery, useGetTourTypeQuery } from "@/redux/feature/Tour/tour.api";
 import Loading from "@/utils/Loading";
 import { format } from "date-fns";
 import { Link, useParams } from "react-router";
 
 export default function TourDetails() {
   const { id } = useParams()
-  const { data, isLoading } = useGetAllTourQuery({ _id: id })
-  const { data: divisionData } = useDivisionDataQuery(undefined)
+  const { data, isLoading } = useGetAllTourQuery({ _id: id }) 
+ 
+  // division  ------AGGREGATE
+  const { data: divisionData } = useDivisionDataQuery({
+    _id: data?.[0].division,
+    fields: "name"
+  }, {
+    skip: !data   //jotokkhon porjonto Tour er data na asbe totokkhon wait korbe
+  })
+// tourType   ------AGGREGATE
+  const { data: tourTypeData } = useGetTourTypeQuery({
+    _id: data?.[0].tourType,
+    fields: "name"
+  }, {
+    skip: !data   
+  })
+
+
   const tourData = data?.[0]
   if (isLoading) {
-    return <Loading/>
+    return <Loading />
   }
 
   return (
@@ -75,10 +91,10 @@ export default function TourDetails() {
               <strong>Arrival:</strong> {tourData?.arrivalLocation}
             </p>
             <p>
-              <strong>Division:</strong> {divisionData?.[0]?.name}
+              <strong>Division:</strong> {divisionData?.data?.[0]?.name}
             </p>
             <p>
-              <strong>Tour Type:</strong> {tourData?.tourType}
+              <strong>Tour Type:</strong> {tourTypeData?.data?.[0]?.name}
             </p>
             <p>
               <strong>Min Age:</strong> {tourData?.minAge} years

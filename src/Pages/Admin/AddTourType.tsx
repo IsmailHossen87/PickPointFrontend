@@ -2,7 +2,7 @@ import { useGetTourTypeQuery } from "@/redux/feature/Tour/tour.api"
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, } from "@/components/ui/pagination"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, } from "@/components/ui/pagination"
 import AddTourModal from "@/module/admin/TourType/AddTourModal"
 import { DeleteConfirmation } from "@/components/DeleteConfirmation"
 import { Trash2 } from "lucide-react"
@@ -13,13 +13,17 @@ import Loading from "@/utils/Loading"
 export default function AddTourType() {
 
   // pagination
-  const [correntPage, setCorrentPage] = useState(1) 
+  const [currentPage, setCorrentPage] = useState(1)
+  const [limit, setLimit] = useState(10)
 
 
-  const { data ,isLoading} = useGetTourTypeQuery({page:correntPage}) 
+  const { data, isLoading } = useGetTourTypeQuery({ page: currentPage, limit })
   const totalPage = data?.meta?.totalPage || 1
-  if(isLoading){
-    return <Loading/>
+
+  // console.log(Array.from({length:totalPage},(_,index)=>(index+1)))
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (
@@ -55,26 +59,34 @@ export default function AddTourType() {
           </TableBody>
         </Table>
       </div>
-      <Pagination className="mt-5 flex justify-start">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious 
-            className={correntPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-             onClick={() => setCorrentPage((prev) => prev - 1)} />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext 
-              className={correntPage === totalPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
-             onClick={() => setCorrentPage((prev) => prev + 1)} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      {/* PAGINATION */}
+      {
+        totalPage > 1 && <Pagination className="mt-5 flex justify-end">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                onClick={() => setCorrentPage((prev) => prev - 1)} />
+            </PaginationItem>
+            {/* Login Handling */}
+            {
+              Array.from({ length: totalPage }, (_, index) => (index + 1))
+                ?.map((page, index) =>
+                  <PaginationItem
+                    onClick={() => setCorrentPage(page)}
+                    key={index}>
+                    <PaginationLink isActive={currentPage === page} href="#">{page}</PaginationLink>
+                  </PaginationItem>)
+            }
+
+            <PaginationItem>
+              <PaginationNext
+                className={currentPage === totalPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                onClick={() => setCorrentPage((prev) => prev + 1)} />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      }
     </div>
   )
 }

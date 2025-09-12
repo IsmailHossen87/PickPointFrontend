@@ -54,8 +54,9 @@ export function AddTour() {
   const [addTour] = useAddTourMutation()
   const [loading, setLoading] = useState(false)
 
-  const { data: divisionData, isLoading: divisionLoading } = useDivisionDataQuery(undefined)
-  const { data: tourTypeData, isLoading: tourLoading } = useGetTourTypeQuery(undefined)
+
+  const { data: divisionData, isLoading: divisionLoading } = useDivisionDataQuery({limit:1000})
+  const { data: tourTypeData, isLoading: tourLoading } = useGetTourTypeQuery({limit:1000})
 
   const divisionOptions = divisionData?.data?.map(
     (item: { _id: string; name: string, country: string }) => ({
