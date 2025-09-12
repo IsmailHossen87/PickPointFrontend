@@ -20,10 +20,10 @@ export default function AddTourModal() {
 
 
    const onsubmit:SubmitHandler<FieldValues> =async(data)=>{
-    console.log("Modals Data",data)
     const res = await addTourType(data).unwrap()
     if(res.success){
        toast.success("Add Tour Type Sucessfully")
+       form.reset();
     }
   
    }

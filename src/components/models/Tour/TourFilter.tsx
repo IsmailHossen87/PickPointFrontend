@@ -16,11 +16,13 @@ import { useSearchParams } from "react-router";
 
 export default function TourFilters() {
     
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();  //URL এর Query Parameter আপডেট করা [...?division=123]
 
   const selectedDivision = searchParams.get("division") || undefined;
   const selectedTourType = searchParams.get("tourType") || undefined;
 
+
+  
   const { data: divisionData, isLoading: divisionIsLoading } =
     useDivisionDataQuery(undefined);
 

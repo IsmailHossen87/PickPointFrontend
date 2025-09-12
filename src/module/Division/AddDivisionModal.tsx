@@ -16,7 +16,7 @@ import type { FileMetadata } from "@/hooks/use-file-upload";
 import { useAddDivisionMutation } from "@/redux/feature/Division/division.api";
 import { useState } from "react";
 
-import { useFieldArray, useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
+import {  useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "sonner";
 // import { toast } from "sonner";
